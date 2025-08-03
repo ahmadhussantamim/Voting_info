@@ -8,6 +8,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+
 public class Main {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Election Commission");
@@ -42,9 +43,9 @@ public class Main {
 
         bt.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	new VotingWindow();
                  frame.dispose();        //to dispose the start frame   
             }
         });
 	}
-
 }
