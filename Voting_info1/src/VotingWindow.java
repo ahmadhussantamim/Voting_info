@@ -77,7 +77,12 @@ public class VotingWindow {
                         resultLabel.setForeground(Color.BLUE);
                         resultLabel.setText(name + " is eligible to vote.");
 
-                    } else {
+                    } 
+                    else if (age==17) {
+                        new NIDRegistrationWindow(name, age);
+                    }
+                        
+                        else {
                         resultLabel.setForeground(Color.BLUE);
                         resultLabel.setText(name + " is NOT eligible to vote.");
                     }
@@ -102,4 +107,5 @@ public class VotingWindow {
         votingFrame.setLocationRelativeTo(null);
         votingFrame.setVisible(true);
     }
-}
+}  
+  
