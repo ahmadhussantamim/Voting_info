@@ -7,7 +7,7 @@ public class VotingWindow {
 
     public VotingWindow() {
         votingFrame = new JFrame("Voting Eligibility Checker");
-        votingFrame.setSize(800, 600);
+        votingFrame.setSize(700, 600);
         votingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         votingFrame.setLayout(null);
 
@@ -22,23 +22,23 @@ public class VotingWindow {
         votingFrame.add(nameLabel);
 
         JTextField nameField = new JTextField();
-        nameField.setFont(new Font("Arial", Font.PLAIN, 22));
+        nameField.setFont(new Font("Arial", Font.PLAIN, 20));
         nameField.setBounds(220, 180, 350, 30);
         votingFrame.add(nameField);
 
         JLabel ageLabel = new JLabel("Age:");
-        ageLabel.setFont(new Font("Arial", Font.PLAIN, 22));
+        ageLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         ageLabel.setBounds(120, 250, 100, 30);
         votingFrame.add(ageLabel);
 
         JTextField ageField = new JTextField();
-        ageField.setFont(new Font("Arial", Font.PLAIN, 22));
+        ageField.setFont(new Font("Arial", Font.PLAIN, 20));
         ageField.setBounds(220, 250, 350, 30);
         votingFrame.add(ageField);
 
         JLabel resultLabel = new JLabel("");
         resultLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        resultLabel.setBounds(100, 400, 600, 30);
+        resultLabel.setBounds(50, 400, 600, 30);
         resultLabel.setForeground(Color.BLUE);
         votingFrame.add(resultLabel);
 
@@ -60,36 +60,35 @@ public class VotingWindow {
 
                 if (!name.matches("[a-zA-Z\\s]+") || name.isEmpty()) {
                     resultLabel.setForeground(Color.RED);
-                    resultLabel.setText("Invalid input! Name must contain letters only.");
+                    resultLabel.setText("Invalid input: Name must contain letters only.");
                     return;
                 }
 
                 try {
                     int age = Integer.parseInt(ageText);
 
-                    if (age < 0 || age > 120) {
+                    if (age < 0 || age > 150) {
                         resultLabel.setForeground(Color.RED);
-                        resultLabel.setText("Invalid input! Age must be realistic.");
+                        resultLabel.setText("Invalid input: Age must be realistic.");
                         return;
                     }
 
                     if (age >= 18) {
                         resultLabel.setForeground(Color.BLUE);
-                        resultLabel.setText(name + " is eligible to vote.");
-
-                    } 
-                    else if (age==17) {
-                        new NIDRegistrationWindow(name, age);
-                    }
+                        resultLabel.setText(name + ", you're eligible to vote.");
                         
-                        else {
+
+                    } else if (age==17) {
+                    	new optionwindow(name);
+                    	votingFrame.dispose();
+                    } else {
                         resultLabel.setForeground(Color.BLUE);
-                        resultLabel.setText(name + " is NOT eligible to vote.");
+                        resultLabel.setText(name + ",you're NOT eligible to vote.");
                     }
 
                 } catch (NumberFormatException ex) {
                     resultLabel.setForeground(Color.RED);
-                    resultLabel.setText("Invalid input! Age must be a number.");
+                    resultLabel.setText("Invalid input: Age must be a number.");
                 }
             }
         });
@@ -107,5 +106,4 @@ public class VotingWindow {
         votingFrame.setLocationRelativeTo(null);
         votingFrame.setVisible(true);
     }
-}  
-  
+}
