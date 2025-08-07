@@ -6,64 +6,77 @@ import java.util.*;
 public class NIDRegistrationWindow {
     public NIDRegistrationWindow(String name, int providedAge) {
         JFrame frame = new JFrame("NID Registration");
-        frame.setSize(600, 400);
-        frame.setLayout(null);
+        frame.setSize(700, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        ImageIcon backgroundIcon = new ImageIcon("images/registration.jpg");
+        Image sc = backgroundIcon.getImage().getScaledInstance(700, 400, Image.SCALE_SMOOTH);
+        ImageIcon backgroundIcon2 = new ImageIcon(sc);
+        
+        JLabel backgroundLabel = new JLabel(backgroundIcon2);
+        backgroundLabel.setBounds(0, 0, 600, 400);
+        frame.setContentPane(backgroundLabel);
+        backgroundLabel.setLayout(null);
+
         JLabel nameLabel = new JLabel("Name:");
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 20));
         nameLabel.setBounds(70, 40, 150, 30);
-        frame.add(nameLabel);
+        nameLabel.setForeground(Color.BLACK);
+        backgroundLabel.add(nameLabel);
 
         JTextField nameField = new JTextField(name);
-        nameField.setBounds(240, 40, 250, 30);
+        nameField.setFont(new Font("Arial", Font.BOLD, 20));
+        nameField.setBounds(240, 40, 280, 30);
         nameField.setEditable(false);
-        frame.add(nameField);
+        backgroundLabel.add(nameField);
 
-        // DOB Label
         JLabel dobLabel = new JLabel("Date of Birth:");
+        dobLabel.setFont(new Font("Arial", Font.BOLD, 20));
         dobLabel.setBounds(70, 90, 200, 30);
-        frame.add(dobLabel);
+        dobLabel.setForeground(Color.BLACK);
+        backgroundLabel.add(dobLabel);
 
         Calendar today = Calendar.getInstance();
         int currentDay = today.get(Calendar.DAY_OF_MONTH);
-        int currentMonth = today.get(Calendar.MONTH) + 1; // MONTH is 0-based
+        int currentMonth = today.get(Calendar.MONTH) + 1;
         int currentYear = today.get(Calendar.YEAR);
 
-        // Day Spinner
-        SpinnerNumberModel dayModel = new SpinnerNumberModel(currentDay, 1, 31, 1);
-        JSpinner daySpinner = new JSpinner(dayModel);
-        daySpinner.setBounds(240, 90, 60, 30);
-        frame.add(daySpinner);
+        JSpinner daySpinner = new JSpinner(new SpinnerNumberModel(currentDay, 1, 31, 1));
+        daySpinner.setBounds(240, 90, 80, 30);
+        backgroundLabel.add(daySpinner);
 
-        // Month Spinner
-        SpinnerNumberModel monthModel = new SpinnerNumberModel(currentMonth, 1, 12, 1);
-        JSpinner monthSpinner = new JSpinner(monthModel);
-        monthSpinner.setBounds(310, 90, 60, 30);
-        frame.add(monthSpinner);
+        JSpinner monthSpinner = new JSpinner(new SpinnerNumberModel(currentMonth, 1, 12, 1));
+        monthSpinner.setBounds(330, 90, 80, 30);
+        backgroundLabel.add(monthSpinner);
 
-        // Year Spinner
-        SpinnerNumberModel yearModel = new SpinnerNumberModel(currentYear, 1900, currentYear, 1);
-        JSpinner yearSpinner = new JSpinner(yearModel);
-        yearSpinner.setBounds(380, 90, 80, 30);
-        frame.add(yearSpinner);
+        JSpinner yearSpinner = new JSpinner(new SpinnerNumberModel(currentYear, 1900, currentYear, 1));
+        yearSpinner.setBounds(420, 90, 100, 30);
+        backgroundLabel.add(yearSpinner);
 
         JLabel mobileLabel = new JLabel("Mobile Number:");
+        mobileLabel.setFont(new Font("Arial", Font.BOLD, 20));
         mobileLabel.setBounds(70, 140, 200, 30);
-        frame.add(mobileLabel);
+        mobileLabel.setForeground(Color.BLACK);
+        backgroundLabel.add(mobileLabel);
 
         JTextField mobileField = new JTextField();
-        mobileField.setBounds(240, 140, 250, 30);
-        frame.add(mobileField);
+        mobileLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        mobileField.setBounds(240, 140, 280, 30);
+        backgroundLabel.add(mobileField);
 
         JLabel resultLabel = new JLabel("");
-        resultLabel.setBounds(70, 250, 450, 30);
-        resultLabel.setForeground(Color.BLUE);
-        resultLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        frame.add(resultLabel);
+        resultLabel.setBounds(50, 250, 650, 40);
+        resultLabel.setForeground(Color.DARK_GRAY);  
+        resultLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        backgroundLabel.add(resultLabel);
 
         JButton submitButton = new JButton("Submit");
-        submitButton.setBounds(240, 200, 120, 35);
-        frame.add(submitButton);
+        submitButton.setFont(new Font("Arial", Font.BOLD, 24));
+        submitButton.setBounds(280, 200, 120, 35);
+        submitButton.setBackground(Color.BLUE);
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFocusPainted(false);
+        backgroundLabel.add(submitButton);
 
         submitButton.addActionListener(e -> {
             int day = (Integer) daySpinner.getValue();
@@ -72,16 +85,14 @@ public class NIDRegistrationWindow {
             String dob = String.format("%02d-%02d-%04d", day, month, year);
             String mobile = mobileField.getText().trim();
 
-            if (mobile.isEmpty()|| !mobile.matches("\\d{11}") ) {
+            if (mobile.isEmpty() || !mobile.matches("\\d{11}")) {
                 resultLabel.setForeground(Color.RED);
                 resultLabel.setText("11 Digit Mobile Number is Required*");
                 return;
             }
 
-            // Calculate age
             int calculatedAge = currentYear - year;
-            if (month > (today.get(Calendar.MONTH) + 1) ||
-                (month == (today.get(Calendar.MONTH) + 1) && day > today.get(Calendar.DAY_OF_MONTH))) {
+            if (month > currentMonth || (month == currentMonth && day > currentDay)) {
                 calculatedAge--;
             }
 
@@ -91,7 +102,6 @@ public class NIDRegistrationWindow {
                 return;
             }
 
-            // Save to file
             String entry = name + "," + dob + "," + mobile;
             File file = new File("nid_registry.txt");
 
@@ -109,11 +119,11 @@ public class NIDRegistrationWindow {
                     scanner.close();
                 }
 
-                try (FileWriter writer = new FileWriter(file, true)) {
-                    writer.write(entry + "\n");
-                    resultLabel.setForeground(Color.GREEN);
-                    resultLabel.setText("Registration successful! you'll get an SMS for the Biometric.");
-                }
+                FileWriter writer = new FileWriter(file, true);
+                writer.write(entry + "\n");
+                writer.close();
+                resultLabel.setForeground(Color.BLACK);
+                resultLabel.setText("Registration successful! you'll get an SMS for the Biometric.");
 
             } catch (IOException ex) {
                 resultLabel.setForeground(Color.RED);
